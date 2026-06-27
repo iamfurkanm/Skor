@@ -1,0 +1,6 @@
+name = "skor"
+compatibility_date = "2026-06-27"
+
+[[kv_namespaces]]
+binding = "MATCHES_KV"
+id = "3e0b5842db00464cb8d0d18f6f94d7d5"
