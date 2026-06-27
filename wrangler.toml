@@ -1,0 +1,8 @@
+name = "skorlar"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "."
+
+# Cloudflare Dashboard'dan KV oluşturduktan sonra
+# Pages > Settings > Functions > KV bindings:
+#   Variable name: MATCHES_KV
+#   KV namespace: skorlar-matches
