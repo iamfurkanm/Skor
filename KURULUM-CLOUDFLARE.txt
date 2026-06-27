@@ -1,0 +1,173 @@
+═══════════════════════════════════════════════════════════
+  SKORLAR — Cloudflare + GitHub Yayınlama Kılavuzu
+═══════════════════════════════════════════════════════════
+
+Bu klasör (Skorlar-Web) internette yayınlanmak için hazırlandı.
+Masaüstündeki "Skorlar" klasörü bilgisayarınızda kalmaya devam eder.
+
+
+─── KLASÖR İÇERİĞİ ───
+
+  index.html, styles.css, app.js  → Site (aynı görünüm)
+  data/matches.json               → Başlangıç maç verileri (3 maç)
+  functions/api/matches.js        → Kayıt API (Cloudflare)
+  wrangler.toml                   → Cloudflare ayar dosyası
+  .gitignore                      → Git için
+
+
+═══════════════════════════════════════════════════════════
+  ADIM 1 — GITHUB HESABI VE REPOSITORY
+═══════════════════════════════════════════════════════════
+
+1. https://github.com adresine gidin, giriş yapın (hesap yoksa ücretsiz açın)
+
+2. Sağ üstte "+" → "New repository" tıklayın
+
+3. Ayarlar:
+   - Repository name: skorlar  (veya istediğiniz isim)
+   - Public veya Private seçin
+   - "Add a README file" İŞARETLEMEYİN (boş repo olsun)
+   - Create repository
+
+4. Repository oluşunca sayfada komutlar görünür.
+   "…or push an existing repository from the command line" bölümünü kullanacağız.
+
+
+═══════════════════════════════════════════════════════════
+  ADIM 2 — DOSYALARI GITHUB'A YÜKLEME
+═══════════════════════════════════════════════════════════
+
+Git kurulu değilse: https://git-scm.com/download/win
+
+Windows'ta "Skorlar-Web" klasörüne sağ tık → "Terminalde Aç" veya
+PowerShell açıp şu komutları sırayla çalıştırın:
+
+  cd "C:\Users\KULLANICI\Masaüstü\Skorlar-Web"
+
+  git init
+  git add .
+  git commit -m "Skorlar sitesi ilk yükleme"
+  git branch -M main
+  git remote add origin https://github.com/KULLANICI_ADINIZ/skorlar.git
+  git push -u origin main
+
+(KULLANICI_ADINIZ ve repo adını kendi bilgilerinizle değiştirin)
+
+GitHub kullanıcı adı/şifre istenirse:
+→ Personal Access Token kullanın (Settings > Developer settings > Tokens)
+
+
+═══════════════════════════════════════════════════════════
+  ADIM 3 — CLOUDFLARE HESABI
+═══════════════════════════════════════════════════════════
+
+1. https://dash.cloudflare.com → Ücretsiz hesap açın
+
+2. Sol menüden "Workers & Pages" tıklayın
+
+3. "Create" → "Pages" → "Connect to Git" seçin
+
+4. GitHub hesabınızı bağlayın (izin verin)
+
+5. "skorlar" repository'sini seçin → Begin setup
+
+
+═══════════════════════════════════════════════════════════
+  ADIM 4 — CLOUDFLARE PAGES AYARLARI
+═══════════════════════════════════════════════════════════
+
+Build ayarları (önemli):
+
+  Framework preset:     None
+  Build command:        (boş bırakın)
+  Build output directory:  .
+
+Deploy'a basın. İlk yayın birkaç dakika sürebilir.
+
+
+═══════════════════════════════════════════════════════════
+  ADIM 5 — KV (VERİ DEPOSU) — ZORUNLU
+═══════════════════════════════════════════════════════════
+
+Maç kayıtlarının saklanması için KV gerekir. Bir kez yapılır:
+
+1. Cloudflare Dashboard → Workers & Pages → KV
+
+2. "Create a namespace" → İsim: skorlar-matches → Create
+
+3. Workers & Pages → Pages → skorlar projenize tıklayın
+
+4. Settings → Functions → KV namespace bindings → Add binding
+
+   Variable name:  MATCHES_KV
+   KV namespace:  skorlar-matches
+
+5. Save
+
+6. Deployments → en son deployment yanında "..." → Retry deployment
+   (veya GitHub'a küçük bir değişiklik push edin)
+
+
+═══════════════════════════════════════════════════════════
+  ADIM 6 — SİTEYİ AÇMA
+═══════════════════════════════════════════════════════════
+
+Pages projenizde "Visit site" linki görünür.
+Adres örneği: https://skorlar-xxxx.pages.dev
+
+Bu linki arkadaşlarınızla paylaşabilirsiniz.
+
+
+═══════════════════════════════════════════════════════════
+  ADIM 7 — ÖZEL ALAN ADI (İSTEĞE BAĞLI)
+═══════════════════════════════════════════════════════════
+
+Kendi domain'iniz varsa (ör. skorlar.com):
+
+1. Pages → Custom domains → Set up a custom domain
+2. Cloudflare'in verdiği DNS kayıtlarını domain sağlayıcınıza ekleyin
+
+
+═══════════════════════════════════════════════════════════
+  GÜNCELLEME YAPMAK
+═══════════════════════════════════════════════════════════
+
+Skorlar-Web klasöründe değişiklik yaptıktan sonra:
+
+  git add .
+  git commit -m "Güncelleme açıklaması"
+  git push
+
+Cloudflare otomatik yeniden yayınlar (1-2 dakika).
+
+
+═══════════════════════════════════════════════════════════
+  VERİLER / YEDEK
+═══════════════════════════════════════════════════════════
+
+• İlk yayında data/matches.json içindeki 3 maç görünür
+• Sonra tüm kayıtlar Cloudflare KV'de tutulur
+• Sitedeki "Yedek Al" ile JSON indirebilirsiniz
+• "Yedek Yükle" ile eski verileri geri yükleyebilirsiniz
+
+Mevcut bilgisayarınızdaki tüm maçlar data/matches.json'da
+bu pakete dahil edildi.
+
+
+═══════════════════════════════════════════════════════════
+  SORUN GİDERME
+═══════════════════════════════════════════════════════════
+
+Maç kaydedilmiyor:
+→ KV binding (MATCHES_KV) yapıldı mı kontrol edin
+→ Deployment'ı yeniden tetikleyin
+
+Site boş görünüyor:
+→ "Yenile" butonuna basın
+→ data/matches.json repo'da var mı kontrol edin
+
+API hatası:
+→ Pages > Functions sekmesinde functions/api/matches.js
+  yüklendiğinden emin olun
+
+═══════════════════════════════════════════════════════════

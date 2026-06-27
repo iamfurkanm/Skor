@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skorlar — PES & FIFA Karnesi</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-brand">
+        <span class="logo">⚽</span>
+        <div>
+          <h1>Skorlar</h1>
+          <p class="subtitle">PES & FIFA maç karnesi</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-ghost" id="btn-reload" title="Verileri sunucudan yeniden yükle">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Yenile
+        </button>
+        <button class="btn btn-ghost" id="btn-backup" title="Verileri JSON olarak indir">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Yedek Al
+        </button>
+        <label class="btn btn-ghost" for="restore-input" title="Yedekten geri yükle">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Yedek Yükle
+        </label>
+        <input type="file" id="restore-input" accept=".json" hidden>
+        <span class="save-indicator" id="save-indicator">Kaydedildi ✓</span>
+      </div>
+    </header>
+
+    <div class="server-banner hidden" id="server-banner">
+      Verilere bağlanılamadı. Sayfayı yenileyin veya internet bağlantınızı kontrol edin.
+    </div>
+
+    <main class="main">
+      <section class="panel panel-left">
+        <div class="steps">
+          <div class="step active" data-step="1"><span>1</span> Oyuncu Seç</div>
+          <div class="step-line"></div>
+          <div class="step" data-step="2"><span>2</span> Oyun Seç</div>
+          <div class="step-line"></div>
+          <div class="step" data-step="3"><span>3</span> Skor Gir</div>
+        </div>
+
+        <div class="step-content active" id="step-1">
+          <h2>İki oyuncu seçin</h2>
+          <p class="hint">Maçı oynayan 2 kişiyi seçin (3 kişiden 2'si)</p>
+          <div class="players-grid" id="players-grid">
+            <button class="player-card" data-player="Zeynel">
+              <span class="player-avatar">Z</span>
+              <span class="player-name">Zeynel</span>
+            </button>
+            <button class="player-card" data-player="Ömer">
+              <span class="player-avatar">Ö</span>
+              <span class="player-name">Ömer</span>
+            </button>
+            <button class="player-card" data-player="Furkan">
+              <span class="player-avatar">F</span>
+              <span class="player-name">Furkan</span>
+            </button>
+          </div>
+          <button class="btn btn-primary btn-next" id="btn-to-game" disabled>Devam Et →</button>
+        </div>
+
+        <div class="step-content" id="step-2">
+          <h2>Oyun seçin</h2>
+          <p class="hint" id="matchup-hint"></p>
+          <div class="games-grid">
+            <button class="game-card" data-game="PES">
+              <span class="game-icon">🎮</span>
+              <span class="game-name">PES</span>
+              <span class="game-desc">eFootball</span>
+            </button>
+            <button class="game-card" data-game="FIFA">
+              <span class="game-icon">⚽</span>
+              <span class="game-name">FIFA</span>
+              <span class="game-desc">EA Sports FC</span>
+            </button>
+          </div>
+          <div class="step-nav">
+            <button class="btn btn-ghost" id="btn-back-to-players">← Geri</button>
+            <button class="btn btn-primary btn-next" id="btn-to-score" disabled>Devam Et →</button>
+          </div>
+        </div>
+
+        <div class="step-content" id="step-3">
+          <h2>Skorları girin</h2>
+          <p class="hint" id="score-hint"></p>
+          <div class="score-entry">
+            <div class="score-player">
+              <span class="score-player-name" id="score-p1-name"></span>
+              <div class="score-controls">
+                <button class="score-btn" data-target="p1" data-action="minus">−</button>
+                <input type="number" class="score-input" id="score-p1" min="0" value="0">
+                <button class="score-btn" data-target="p1" data-action="plus">+</button>
+              </div>
+            </div>
+            <div class="score-vs">VS</div>
+            <div class="score-player">
+              <span class="score-player-name" id="score-p2-name"></span>
+              <div class="score-controls">
+                <button class="score-btn" data-target="p2" data-action="minus">−</button>
+                <input type="number" class="score-input" id="score-p2" min="0" value="0">
+                <button class="score-btn" data-target="p2" data-action="plus">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="penalty-section hidden" id="penalty-section">
+            <div class="penalty-intro" id="penalty-intro">
+              <p class="penalty-hint">Skor berabere bitti — penaltılara gittiyse kazananı seçin</p>
+              <button type="button" class="btn btn-penalty" id="btn-toggle-penalty">Penaltılara Gitti</button>
+            </div>
+            <div class="penalty-picker hidden" id="penalty-picker">
+              <p class="penalty-hint">Penaltılarla kim kazandı?</p>
+              <div class="penalty-players" id="penalty-players"></div>
+              <button type="button" class="btn btn-ghost btn-sm" id="btn-cancel-penalty">İptal</button>
+            </div>
+            <div class="penalty-confirmed hidden" id="penalty-confirmed">
+              <span class="penalty-badge" id="penalty-confirmed-text"></span>
+              <button type="button" class="btn btn-ghost btn-sm" id="btn-change-penalty">Değiştir</button>
+            </div>
+          </div>
+
+          <div class="step-nav">
+            <button class="btn btn-ghost" id="btn-back-to-game">← Geri</button>
+            <button class="btn btn-primary btn-save" id="btn-save-match">Maçı Kaydet ✓</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel panel-right">
+        <div class="recent-matches">
+          <h3>Son Maçlar</h3>
+          <ul class="match-list" id="match-list"></ul>
+        </div>
+      </aside>
+    </main>
+
+    <section class="panel panel-scoreboard">
+      <h2 class="section-title">Genel Skorboard</h2>
+      <p class="section-desc">Tüm oyunlar (PES + FIFA) — 3 kişinin toplam karnesi</p>
+      <div id="general-board"></div>
+
+      <div class="game-sections">
+        <div class="game-section">
+          <h3 class="game-section-title pes-title">PES Karnesi</h3>
+          <div id="pes-board"></div>
+        </div>
+        <div class="game-section">
+          <h3 class="game-section-title fifa-title">FIFA Karnesi</h3>
+          <div id="fifa-board"></div>
+        </div>
+      </div>
+
+      <h2 class="section-title section-title-spaced">Detaylı Döküm</h2>
+      <p class="section-desc">Her oyuncunun birbirine karşı galibiyet, mağlubiyet ve gol istatistikleri</p>
+      <div class="player-details" id="player-details"></div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

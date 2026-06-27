@@ -1,0 +1,66 @@
+═══════════════════════════════════════════════════════════
+  GITHUB'A YÜKLEME — Git kurulu değilse
+═══════════════════════════════════════════════════════════
+
+Hata: "git is not recognized" = Git yüklü değil.
+Aşağıdaki YÖNTEM A daha kolay (tarayıcıdan yükleme).
+
+
+─── YÖNTEM A — TARAYICIDAN YÜKLE (ÖNERİLEN) ───
+
+1. Tarayıcıda açın:
+   https://github.com/iamfurkanm/skorlar
+
+2. Repo boşsa "uploading an existing file" linkine tıklayın.
+   (veya "Add file" → "Upload files")
+
+3. Bu klasördeki TÜM dosya ve klasörleri sürükleyip bırakın:
+
+   ✓ index.html
+   ✓ styles.css
+   ✓ app.js
+   ✓ wrangler.toml
+   ✓ .gitignore
+   ✓ KURULUM-CLOUDFLARE.txt
+   ✓ data klasörü (içinde matches.json)
+   ✓ functions klasörü (içinde api/matches.js)
+
+4. Altta "Commit changes" → yeşil butona basın.
+
+5. GitHub'da dosyalar görünüyorsa tamam!
+   Cloudflare adımına geçin (KURULUM-CLOUDFLARE.txt Adım 3).
+
+
+─── YÖNTEM B — GİT KUR, SONRA KOMUTLAR ───
+
+1. İndir: https://git-scm.com/download/win
+   (64-bit Git for Windows Setup)
+
+2. Kurulumda varsayılan ayarları olduğu gibi bırakın → Install
+
+3. Bilgisayarı YENİDEN BAŞLATIN (önemli!)
+
+4. PowerShell'i YENİDEN açın, şu komutları TEK TEK çalıştırın:
+
+   cd "C:\Users\fsava\OneDrive\Masaüstü\Skorlar-Web"
+   git init
+   git add .
+   git commit -m "Skorlar sitesi ilk yükleme"
+   git branch -M main
+   git remote add origin https://github.com/iamfurkanm/skorlar.git
+   git push -u origin main
+
+5. GitHub kullanıcı adı/şifre isterse:
+   → Şifre yerine "Personal Access Token" gerekir
+   → GitHub → Settings → Developer settings → Personal access tokens
+   → Generate new token (classic) → repo yetkisi ver → token'ı kopyala
+   → Şifre sorulunca bu token'ı yapıştır
+
+
+─── SONRAKI ADIM ───
+
+GitHub'da dosyalar göründükten sonra:
+→ KURULUM-CLOUDFLARE.txt dosyasındaki Adım 3'ten devam edin
+→ Cloudflare Pages + KV bağlantısı
+
+═══════════════════════════════════════════════════════════
